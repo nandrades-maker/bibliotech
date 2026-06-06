@@ -4,30 +4,152 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>BiblioTechc — Préstamos</title>
-   <link rel="icon" href="img/bibliotech_dorado.svg"/>
+  <link rel="icon" href="img/bibliotech_dorado.svg"/>
   <link rel="stylesheet" href="css/variables.css"/>
   <link rel="stylesheet" href="css/main.css"/>
   <link rel="stylesheet" href="css/components.css"/>
+  <style>
+    /* ── Buscador en vivo ── */
+    .search-live-wrap {
+      position: relative;
+    }
+    .search-live-input {
+      width: 100%;
+      background: var(--clr-bg-3);
+      border: 1px solid var(--clr-border-line);
+      border-radius: var(--r-sm);
+      padding: var(--sp-3) var(--sp-4) var(--sp-3) calc(var(--sp-4) + 22px);
+      color: var(--clr-text);
+      font-family: var(--ff-body);
+      font-size: var(--fs-sm);
+      transition: var(--tr-base);
+      width: 100%;
+    }
+    .search-live-input::placeholder { color: var(--clr-text-3); }
+    .search-live-input:focus {
+      outline: none;
+      border-color: var(--clr-accent);
+      box-shadow: 0 0 0 3px var(--clr-accent-dim);
+      background: var(--clr-bg-4);
+    }
+    .search-live-icon {
+      position: absolute;
+      left: var(--sp-3); top: 50%; transform: translateY(-50%);
+      color: var(--clr-text-3); font-size: 15px; pointer-events: none;
+    }
+
+    /* Dropdown de resultados */
+    .search-results {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: var(--clr-bg-2);
+      border: 1px solid var(--clr-border-2);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow-lg);
+      z-index: 50;
+      overflow: hidden;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .search-results.hidden { display: none; }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      padding: var(--sp-3) var(--sp-4);
+      cursor: pointer;
+      border-bottom: 1px solid var(--clr-border-line);
+      transition: background 0.15s;
+    }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover:not(.loading):not(.empty):not(.disabled) {
+      background: var(--clr-bg-3);
+    }
+    .search-result-item.disabled { opacity: 0.45; cursor: not-allowed; }
+    .search-result-item.loading,
+    .search-result-item.empty {
+      justify-content: center;
+      font-size: var(--fs-xs);
+      color: var(--clr-text-3);
+      cursor: default;
+      padding: var(--sp-4);
+    }
+
+    .sri-name {
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-med);
+      color: var(--clr-text);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sri-meta {
+      font-size: var(--fs-xs);
+      color: var(--clr-text-3);
+      flex-shrink: 0;
+      max-width: 160px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sri-badge { flex-shrink: 0; font-size: var(--fs-xs); }
+
+    /* Chip de selección */
+    .selected-chip {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      background: var(--clr-accent-dim);
+      border: 1px solid var(--clr-border-2);
+      border-radius: var(--r-sm);
+      padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-4);
+      margin-top: var(--sp-2);
+    }
+    .selected-chip.hidden { display: none; }
+    .chip-info { flex: 1; min-width: 0; }
+    .chip-name   { font-size: var(--fs-sm); font-weight: var(--fw-med); color: var(--clr-accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chip-detail { font-size: var(--fs-xs); color: var(--clr-text-3); }
+    .chip-clear  {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--clr-text-3);
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: var(--tr-fast);
+    }
+    .chip-clear:hover { background: var(--clr-red-dim); color: var(--clr-red); }
+  </style>
 </head>
 <body>
 <div class="app-layout">
 
   <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
     <div class="sidebar__brand">
-      <div class="sidebar__logo-icon" aria-hidden="true"><img src="img/bibliotech_blanco.svg" alt="BiblioTechc"  style="width: 100px; height: auto;"/></div>
+      <div class="sidebar__logo-icon" aria-hidden="true">
+        <img src="img/bibliotech_blanco.svg" alt="BiblioTechc" style="width:100%;height:auto" onerror="this.parentElement.textContent='📚'"/>
+      </div>
       <span class="sidebar__brand-name">BiblioTechc</span>
     </div>
     <nav class="sidebar__nav">
       <div class="nav-section">
         <p class="nav-section__label">Principal</p>
-        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon">🏠</span> Dashboard</a>
+        <a href="index.html"     class="nav-link"><span class="nav-link__icon">🏠</span> Inicio</a>
+        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon">📊</span> Dashboard</a>
         <a href="libros.html"    class="nav-link"><span class="nav-link__icon">📖</span> Libros</a>
         <a href="usuarios.html"  class="nav-link"><span class="nav-link__icon">👥</span> Usuarios</a>
         <a href="prestamos.html" class="nav-link"><span class="nav-link__icon">🔖</span> Préstamos</a>
       </div>
       <div class="nav-section">
         <p class="nav-section__label">Cuenta</p>
-        <a href="perfil.html" class="nav-link"><span class="nav-link__icon">⚙️</span> Perfil</a>
+        <a href="perfil.html"       class="nav-link"><span class="nav-link__icon">⚙️</span> Perfil</a>
+        <a href="crear-acceso.html" class="nav-link"><span class="nav-link__icon">🔐</span> Crear acceso</a>
       </div>
     </nav>
     <div class="sidebar__footer">
@@ -59,7 +181,7 @@
         <p class="page-header__sub">Registro y control de préstamos de libros</p>
       </div>
 
-      <!-- Stats rápidas -->
+      <!-- Stats -->
       <div class="grid-3 stagger" style="margin-bottom:var(--sp-8)">
         <div class="stat-card animate-fade-up">
           <div class="stat-card__icon stat-card__icon--amber">🔖</div>
@@ -82,7 +204,7 @@
         <div class="toolbar__left">
           <div class="search-bar">
             <span class="search-icon">🔍</span>
-            <input type="search" id="filter-input" placeholder="Buscar por ID de usuario o ISBN…"/>
+            <input type="search" id="filter-input" placeholder="Buscar por usuario o ISBN…"/>
           </div>
         </div>
         <div class="toolbar__right">
@@ -94,63 +216,113 @@
       <div class="table-wrapper animate-fade-up">
         <table class="data-table">
           <thead><tr>
-            <th>Libro (ISBN → Título)</th>
+            <th>Libro</th>
             <th>Usuario</th>
             <th>Fecha préstamo</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr></thead>
           <tbody id="prestamos-tbody">
-            <tr><td colspan="5"><div style="padding:var(--sp-8);text-align:center"><div class="spinner"></div></div></td></tr>
+            <tr><td colspan="5">
+              <div style="padding:var(--sp-8);text-align:center">
+                <div class="spinner"></div>
+              </div>
+            </td></tr>
           </tbody>
         </table>
       </div>
-
       <div id="pagination-prestamos" class="pagination"></div>
     </main>
   </div>
 </div>
 
-<!-- MODAL: Nuevo préstamo -->
-<div class="modal-backdrop" id="modal-form" role="dialog" aria-modal="true">
+<!-- ══════════════════════════════════════
+     MODAL: Nuevo préstamo
+     Búsqueda en vivo — sin selects masivos
+══════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-form" role="dialog" aria-modal="true"
+  aria-labelledby="modal-form-title">
   <div class="modal">
     <div class="modal__header">
-      <h2 class="modal__title">Registrar préstamo</h2>
-      <button class="modal__close" id="close-form">✕</button>
+      <h2 class="modal__title" id="modal-form-title">Registrar préstamo</h2>
+      <button class="modal__close" id="close-form" aria-label="Cerrar">✕</button>
     </div>
     <div class="modal__body">
-      <form id="prestamo-form" novalidate>
 
-        <div class="form-group">
-          <label class="form-label" for="f-usuario">Usuario <span class="required">*</span></label>
-          <select class="form-select" id="f-usuario" data-required>
-            <option value="">Seleccionar usuario…</option>
-          </select>
-          <p class="form-error">Selecciona un usuario</p>
-          <p class="form-hint">O ingresa directamente el ID</p>
+      <!-- ── USUARIO ── -->
+      <div class="form-group">
+        <label class="form-label">
+          Usuario <span class="required">*</span>
+        </label>
+        <p class="form-hint" style="margin-bottom:var(--sp-2)">
+          Escribe el <strong>correo</strong> o <strong>número de celular</strong>
+        </p>
+
+        <div class="search-live-wrap" id="usuario-search-wrap">
+          <span class="search-live-icon" aria-hidden="true">🔍</span>
+          <input
+            class="search-live-input"
+            type="search"
+            id="usuario-search"
+            placeholder="Ej: correo@gmail.com o 3001234567"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div class="search-results hidden" id="usuario-results"></div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="f-usuario-id">ID de usuario (manual)</label>
-          <input class="form-input" type="text" id="f-usuario-id" placeholder="ID MongoDB del usuario"/>
-          <p class="form-hint">Si no aparece en la lista, ingresa el ID aquí</p>
+        <!-- Chip usuario seleccionado -->
+        <div class="selected-chip hidden" id="usuario-chip">
+          <span style="font-size:1.1rem">👤</span>
+          <div class="chip-info">
+            <div class="chip-name"   id="chip-usuario-nombre">—</div>
+            <div class="chip-detail" id="chip-usuario-detalle">—</div>
+          </div>
+          <button class="chip-clear" id="clear-usuario" aria-label="Quitar usuario">✕</button>
+        </div>
+      </div>
+
+      <!-- ── LIBRO ── -->
+      <div class="form-group">
+        <label class="form-label">
+          Libro <span class="required">*</span>
+        </label>
+        <p class="form-hint" style="margin-bottom:var(--sp-2)">
+          Escribe el <strong>ISBN</strong> (número) o parte del <strong>título</strong>
+        </p>
+
+        <div class="search-live-wrap" id="libro-search-wrap">
+          <span class="search-live-icon" aria-hidden="true">📖</span>
+          <input
+            class="search-live-input"
+            type="search"
+            id="libro-search"
+            placeholder="Ej: 9789584277 o El principito"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div class="search-results hidden" id="libro-results"></div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="f-isbn">Libro (ISBN) <span class="required">*</span></label>
-          <select class="form-select" id="f-isbn" data-required>
-            <option value="">Seleccionar libro…</option>
-          </select>
-          <p class="form-error">Selecciona un libro</p>
+        <!-- Chip libro seleccionado -->
+        <div class="selected-chip hidden" id="libro-chip">
+          <span style="font-size:1.1rem">📚</span>
+          <div class="chip-info">
+            <div class="chip-name"   id="chip-libro-titulo">—</div>
+            <div class="chip-detail" id="chip-libro-detalle">—</div>
+          </div>
+          <button class="chip-clear" id="clear-libro" aria-label="Quitar libro">✕</button>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label class="form-label" for="f-fecha">Fecha del préstamo <span class="required">*</span></label>
-          <input class="form-input" type="date" id="f-fecha" data-required/>
-          <p class="form-error">Campo requerido</p>
-        </div>
+      <!-- ── FECHA ── -->
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label" for="f-fecha">
+          Fecha del préstamo <span class="required">*</span>
+        </label>
+        <input class="form-input" type="date" id="f-fecha"/>
+      </div>
 
-      </form>
     </div>
     <div class="modal__footer">
       <button class="btn btn--ghost" id="cancel-form">Cancelar</button>
