@@ -80,7 +80,12 @@ function render() {
   const q     = document.getElementById('filter-input').value.trim();
   const tbody = document.getElementById('prestamos-tbody');
   const libroMap   = Object.fromEntries(allLibros.map(l  => [String(l.isbn), l]));
-  const usuarioMap = Object.fromEntries(allUsuarios.map(u => [u._id, u]));
+  /* Indexar por _id Y por id para cubrir ambos formatos de la API */
+  const usuarioMap = {};
+  allUsuarios.forEach(u => {
+    if (u._id) usuarioMap[u._id] = u;
+    if (u.id)  usuarioMap[u.id]  = u;
+  });
 
   if (!page.length) {
     tbody.innerHTML = `<tr><td colspan="5"><div class="table-empty">
