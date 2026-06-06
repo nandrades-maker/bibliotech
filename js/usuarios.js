@@ -134,7 +134,7 @@ function openDetalle(id){
     <div class="detail-row"><span class="detail-row__label">Teléfono</span><span class="detail-row__value">${u.telefono||'—'}</span></div>
     <div class="detail-row"><span class="detail-row__label">Dirección</span><span class="detail-row__value">${u.direccion||'—'}</span></div>
     <div class="detail-row"><span class="detail-row__label">Registro</span><span class="detail-row__value">${formatDate(u.fecha_registro)}</span></div>
-    <div class="detail-row"><span class="detail-row__label">ID</span><span class="detail-row__value cell-mono" style="font-size:0.7rem">${u._id}</span></div>
+    <div class="detail-row"><span class="detail-row__label">ID</span><span class="detail-row__value cell-mono" style="font-size:0.7rem">${u.id}</span></div>
   `;
   Modal.open('modal-detalle');
 }
