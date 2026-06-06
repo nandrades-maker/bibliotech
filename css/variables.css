@@ -1,0 +1,108 @@
+/* ─────────────────────────────────────────
+   BiblioTechc — variables.css
+   Design tokens & custom properties
+   Estética: Biblioteca nocturna · Editorial oscuro
+   Fuentes: Playfair Display + DM Sans
+───────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+:root {
+  /* ── Paleta principal ── */
+  --clr-bg:          #0d0f14;
+  --clr-bg-2:        #131720;
+  --clr-bg-3:        #1a1f2e;
+  --clr-bg-4:        #212840;
+  --clr-bg-card:     #161b28;
+  --clr-bg-glass:    rgba(22, 27, 40, 0.75);
+
+  --clr-accent:      #c8a96e;     /* dorado biblioteca */
+  --clr-accent-soft: #e8c98a;
+  --clr-accent-dim:  rgba(200, 169, 110, 0.15);
+  --clr-accent-glow: rgba(200, 169, 110, 0.3);
+
+  --clr-blue:        #4e8ef7;
+  --clr-blue-dim:    rgba(78, 142, 247, 0.12);
+  --clr-green:       #3ecf8e;
+  --clr-green-dim:   rgba(62, 207, 142, 0.12);
+  --clr-red:         #f06060;
+  --clr-red-dim:     rgba(240, 96, 96, 0.12);
+  --clr-amber:       #f5a623;
+  --clr-amber-dim:   rgba(245, 166, 35, 0.12);
+
+  --clr-text:        #e8e4d9;
+  --clr-text-2:      #a8a39a;
+  --clr-text-3:      #6b6760;
+  --clr-text-inv:    #0d0f14;
+
+  --clr-border:      rgba(200, 169, 110, 0.1);
+  --clr-border-2:    rgba(200, 169, 110, 0.2);
+  --clr-border-line: rgba(255,255,255,0.06);
+
+  /* ── Tipografía ── */
+  --ff-display: 'Playfair Display', Georgia, serif;
+  --ff-body:    'DM Sans', system-ui, sans-serif;
+
+  --fs-xs:   0.72rem;
+  --fs-sm:   0.85rem;
+  --fs-base: 1rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.35rem;
+  --fs-xl:   1.75rem;
+  --fs-2xl:  2.25rem;
+  --fs-3xl:  3rem;
+
+  --fw-light:  300;
+  --fw-reg:    400;
+  --fw-med:    500;
+  --fw-semi:   600;
+  --fw-bold:   700;
+  --fw-black:  900;
+
+  --lh-tight:  1.15;
+  --lh-normal: 1.5;
+  --lh-loose:  1.8;
+
+  /* ── Espaciado ── */
+  --sp-1:  0.25rem;
+  --sp-2:  0.5rem;
+  --sp-3:  0.75rem;
+  --sp-4:  1rem;
+  --sp-5:  1.25rem;
+  --sp-6:  1.5rem;
+  --sp-8:  2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+
+  /* ── Radios ── */
+  --r-xs:  4px;
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  24px;
+  --r-full: 9999px;
+
+  /* ── Sombras ── */
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.4);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.6);
+  --shadow-glow:  0 0 20px rgba(200, 169, 110, 0.2);
+  --shadow-card:  0 2px 12px rgba(0,0,0,0.4), 0 0 0 1px var(--clr-border);
+
+  /* ── Transiciones ── */
+  --tr-fast:   all 0.15s ease;
+  --tr-base:   all 0.25s ease;
+  --tr-slow:   all 0.4s ease;
+
+  /* ── Layout ── */
+  --sidebar-w: 240px;
+  --topbar-h:  64px;
+  --content-max: 1200px;
+
+  /* ── Z-index ── */
+  --z-base:    1;
+  --z-nav:     100;
+  --z-modal:   200;
+  --z-toast:   300;
+}

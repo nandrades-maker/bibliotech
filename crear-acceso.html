@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>BiblioTechc — Crear acceso de administrador</title>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo-icon">📚</div>
+      <span class="sidebar__brand-name">BiblioTechc</span>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-section__label">Principal</p>
+        <a href="index.html"     class="nav-link"><span class="nav-link__icon">🏠</span> Inicio</a>
+        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon">📊</span> Dashboard</a>
+        <a href="libros.html"    class="nav-link"><span class="nav-link__icon">📖</span> Libros</a>
+        <a href="usuarios.html"  class="nav-link"><span class="nav-link__icon">👥</span> Usuarios</a>
+        <a href="prestamos.html" class="nav-link"><span class="nav-link__icon">🔖</span> Préstamos</a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-section__label">Cuenta</p>
+        <a href="perfil.html" class="nav-link"><span class="nav-link__icon">⚙️</span> Perfil</a>
+        <a href="crear-acceso.html" class="nav-link"><span class="nav-link__icon">🔐</span> Crear acceso</a>
+      </div>
+    </nav>
+    <div class="sidebar__footer">
+      <div class="user-chip" id="logout-btn" role="button" tabindex="0">
+        <div class="user-chip__avatar" id="user-initial">A</div>
+        <div class="user-chip__info">
+          <div class="user-chip__name" id="user-name">Usuario</div>
+          <div class="user-chip__role">Administrador</div>
+        </div>
+        <span class="user-chip__logout">↩</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú">☰</button>
+      <div>
+        <div class="topbar__title">Crear acceso</div>
+        <div class="topbar__breadcrumb">
+          <a href="usuarios.html" style="color:var(--clr-text-3);text-decoration:none">Usuarios</a>
+          › <span>Crear acceso</span>
+        </div>
+      </div>
+      <div class="topbar__spacer"></div>
+      <a href="usuarios.html" class="btn btn--ghost btn--sm">← Volver</a>
+    </header>
+
+    <main class="page-body" style="max-width:640px">
+
+      <div class="page-header animate-fade-up">
+        <p class="page-header__eyebrow">Seguridad</p>
+        <h1 class="page-header__title">Crear acceso de<br/>administrador</h1>
+        <p class="page-header__sub">
+          Asigna credenciales de acceso al sistema a un usuario con rol <strong>Admin</strong>.
+          Solo los administradores pueden iniciar sesión.
+        </p>
+      </div>
+
+      <!-- Info box -->
+      <div style="
+        background:var(--clr-accent-dim);
+        border:1px solid var(--clr-border-2);
+        border-radius:var(--r-md);
+        padding:var(--sp-4) var(--sp-5);
+        display:flex; gap:var(--sp-3); align-items:flex-start;
+        margin-bottom:var(--sp-8);
+      " class="animate-fade-up">
+        <span style="font-size:1.2rem;flex-shrink:0">🔐</span>
+        <div>
+          <p style="font-size:var(--fs-sm);font-weight:var(--fw-med);color:var(--clr-accent);margin-bottom:4px">
+            ¿Cómo funciona?
+          </p>
+          <p style="font-size:var(--fs-xs);color:var(--clr-text-2);line-height:1.7">
+            El sistema vincula el acceso con el <code style="background:var(--clr-bg-4);padding:1px 5px;border-radius:3px;font-size:0.7rem">id_user</code>
+            del usuario seleccionado. El campo <strong>usuario</strong> (nombre de acceso) actúa como
+            identificador único en la colección <code style="background:var(--clr-bg-4);padding:1px 5px;border-radius:3px;font-size:0.7rem">login</code>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Estado: cargando admins -->
+      <div id="loading-admins" class="card animate-fade-up" style="text-align:center;padding:var(--sp-8)">
+        <div class="spinner" style="margin:0 auto var(--sp-4)"></div>
+        <p style="font-size:var(--fs-sm);color:var(--clr-text-3)">Cargando administradores disponibles…</p>
+      </div>
+
+      <!-- Estado: sin admins -->
+      <div id="no-admins" class="card animate-fade-up hidden">
+        <div class="empty-state" style="padding:var(--sp-10) var(--sp-4)">
+          <div class="empty-state__icon">👤</div>
+          <h3 class="empty-state__title">Sin administradores</h3>
+          <p class="empty-state__sub">
+            No hay usuarios con rol <strong>Admin</strong> registrados.<br/>
+            Primero crea un usuario con ese rol en la sección Usuarios.
+          </p>
+          <a href="usuarios.html" class="btn btn--primary" style="margin-top:var(--sp-4)">
+            Ir a Usuarios →
+          </a>
+        </div>
+      </div>
+
+      <!-- Formulario principal -->
+      <div id="form-container" class="hidden">
+
+        <!-- Paso 1: Seleccionar admin -->
+        <div class="card card--glow animate-fade-up" style="margin-bottom:var(--sp-5)">
+          <div class="card__header" style="margin-bottom:var(--sp-4)">
+            <div>
+              <div class="card__title">Paso 1 — Seleccionar administrador</div>
+              <div class="card__sub">Solo usuarios con rol Admin pueden recibir acceso</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="select-admin">
+              Administrador <span class="required">*</span>
+            </label>
+            <select class="form-select" id="select-admin" style="width:100%">
+              <option value="">— Selecciona un administrador —</option>
+            </select>
+            <p class="form-hint">Al seleccionar, se previsualiza su información</p>
+          </div>
+        </div>
+
+        <!-- Preview del admin seleccionado -->
+        <div id="admin-preview" class="card hidden animate-fade-up" style="margin-bottom:var(--sp-5)">
+          <div style="display:flex;align-items:center;gap:var(--sp-4)">
+            <div id="preview-avatar" style="
+              width:52px;height:52px;border-radius:50%;
+              background:var(--clr-accent-dim);
+              border:2px solid var(--clr-accent);
+              display:flex;align-items:center;justify-content:center;
+              font-family:var(--ff-display);font-size:1.3rem;
+              font-weight:900;color:var(--clr-accent);flex-shrink:0
+            ">?</div>
+            <div>
+              <div id="preview-nombre" style="font-weight:var(--fw-semi);color:var(--clr-text)">—</div>
+              <div id="preview-correo" style="font-size:var(--fs-xs);color:var(--clr-text-3);margin-top:2px">—</div>
+              <div style="margin-top:6px">
+                <span class="badge badge--gold">Admin</span>
+                <span id="preview-id" class="badge badge--gray" style="margin-left:6px;font-size:0.65rem;font-family:monospace">id…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 2: Credenciales -->
+        <div class="card card--glow animate-fade-up" style="margin-bottom:var(--sp-6)">
+          <div class="card__header" style="margin-bottom:var(--sp-4)">
+            <div>
+              <div class="card__title">Paso 2 — Credenciales de acceso</div>
+              <div class="card__sub">Define el nombre de usuario y contraseña para el login</div>
+            </div>
+          </div>
+
+          <form id="acceso-form" novalidate>
+            <!-- usuario (= _id en colección login) -->
+            <div class="form-group">
+              <label class="form-label" for="f-usuario">
+                Nombre de usuario <span class="required">*</span>
+              </label>
+              <div class="input-icon-wrap">
+                <span class="icon-left" aria-hidden="true">👤</span>
+                <input class="form-input has-left" type="text" id="f-usuario"
+                  data-required
+                  placeholder="ej: admin.garcia"
+                  autocomplete="username"
+                  spellcheck="false"/>
+              </div>
+              <p class="form-hint">Sin espacios ni caracteres especiales. Será el ID de login.</p>
+              <p class="form-error" id="err-usuario">Campo requerido</p>
+            </div>
+
+            <!-- password -->
+            <div class="form-group">
+              <label class="form-label" for="f-password">
+                Contraseña <span class="required">*</span>
+              </label>
+              <div class="input-icon-wrap">
+                <span class="icon-left" aria-hidden="true">🔒</span>
+                <input class="form-input has-left has-right" type="password" id="f-password"
+                  data-required
+                  placeholder="Mínimo 6 caracteres"
+                  autocomplete="new-password"
+                  minlength="6"/>
+                <button type="button" class="icon-right" id="toggle-pw" aria-label="Mostrar contraseña">👁</button>
+              </div>
+              <p class="form-error" id="err-password">Mínimo 6 caracteres</p>
+            </div>
+
+            <!-- confirmar password -->
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="f-confirm">
+                Confirmar contraseña <span class="required">*</span>
+              </label>
+              <div class="input-icon-wrap">
+                <span class="icon-left" aria-hidden="true">🔒</span>
+                <input class="form-input has-left" type="password" id="f-confirm"
+                  data-required
+                  placeholder="Repite la contraseña"
+                  autocomplete="new-password"/>
+              </div>
+              <p class="form-error" id="err-confirm">Las contraseñas no coinciden</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Resumen antes de crear -->
+        <div id="resumen-box" class="hidden animate-fade-up" style="
+          background:var(--clr-green-dim);
+          border:1px solid rgba(62,207,142,0.2);
+          border-radius:var(--r-md);
+          padding:var(--sp-4) var(--sp-5);
+          margin-bottom:var(--sp-5);
+          display:flex; gap:var(--sp-3); align-items:center;
+        ">
+          <span style="font-size:1.2rem">✅</span>
+          <div style="font-size:var(--fs-sm);color:var(--clr-green)">
+            Se creará el acceso para
+            <strong id="resumen-nombre">—</strong>
+            con usuario <strong id="resumen-usuario">—</strong>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div style="display:flex;gap:var(--sp-3);justify-content:flex-end">
+          <a href="usuarios.html" class="btn btn--ghost">Cancelar</a>
+          <button class="btn btn--primary" id="btn-crear-acceso" style="min-width:180px">
+            🔐 Crear acceso
+          </button>
+        </div>
+
+      </div><!-- /form-container -->
+
+    </main>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/crear-acceso.js"></script>
+</body>
+</html>

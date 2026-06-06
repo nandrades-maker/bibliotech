@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>BiblioTechc — Dashboard</title>
+   <link rel="icon" href="img/bibliotech_dorado.svg"/>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo-icon" aria-hidden="true"><img src="img/bibliotech_blanco.svg" alt="BiblioTechc"  style="width: 100px; height: auto;"/></div>
+      <span class="sidebar__brand-name">BiblioTechc</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-section__label">Principal</p>
+        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon" aria-hidden="true">🏠</span> Dashboard</a>
+        <a href="libros.html"    class="nav-link"><span class="nav-link__icon" aria-hidden="true">📖</span> Libros</a>
+        <a href="usuarios.html"  class="nav-link"><span class="nav-link__icon" aria-hidden="true">👥</span> Usuarios</a>
+        <a href="prestamos.html" class="nav-link"><span class="nav-link__icon" aria-hidden="true">🔖</span> Préstamos</a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-section__label">Cuenta</p>
+        <a href="perfil.html" class="nav-link"><span class="nav-link__icon" aria-hidden="true">⚙️</span> Perfil</a>
+      </div>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="user-chip" id="logout-btn" role="button" tabindex="0" aria-label="Cerrar sesión">
+        <div class="user-chip__avatar" id="user-initial">A</div>
+        <div class="user-chip__info">
+          <div class="user-chip__name" id="user-name">Usuario</div>
+          <div class="user-chip__role">Administrador</div>
+        </div>
+        <span class="user-chip__logout" aria-hidden="true">↩</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú">☰</button>
+      <div>
+        <div class="topbar__title">Dashboard</div>
+        <div class="topbar__breadcrumb">Inicio › <span>Resumen</span></div>
+      </div>
+      <div class="topbar__spacer"></div>
+      <div id="last-updated" style="font-size:var(--fs-xs);color:var(--clr-text-3)"></div>
+    </header>
+
+    <main class="page-body" id="page-body">
+
+      <div class="page-header animate-fade-up">
+        <p class="page-header__eyebrow">Vista general</p>
+        <h1 class="page-header__title">Panel de control</h1>
+        <p class="page-header__sub">Estadísticas en tiempo real del sistema de biblioteca</p>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="grid-4 stagger" id="stat-grid" style="margin-bottom:var(--sp-8)">
+        <div class="stat-card animate-fade-up">
+          <div class="stat-card__icon stat-card__icon--gold" aria-hidden="true">📖</div>
+          <div class="stat-card__value" id="stat-libros">—</div>
+          <div class="stat-card__label">Total libros</div>
+          <div class="stat-card__delta stat-card__delta--up" id="stat-libros-delta"></div>
+        </div>
+        <div class="stat-card animate-fade-up">
+          <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">👥</div>
+          <div class="stat-card__value" id="stat-usuarios">—</div>
+          <div class="stat-card__label">Usuarios registrados</div>
+          <div class="stat-card__delta stat-card__delta--up" id="stat-usuarios-delta"></div>
+        </div>
+        <div class="stat-card animate-fade-up">
+          <div class="stat-card__icon stat-card__icon--amber" aria-hidden="true">🔖</div>
+          <div class="stat-card__value" id="stat-prestamos">—</div>
+          <div class="stat-card__label">Préstamos activos</div>
+          <div class="stat-card__delta" id="stat-prestamos-delta"></div>
+        </div>
+        <div class="stat-card animate-fade-up">
+          <div class="stat-card__icon stat-card__icon--green" aria-hidden="true">✅</div>
+          <div class="stat-card__value" id="stat-disponibles">—</div>
+          <div class="stat-card__label">Libros disponibles</div>
+          <div class="stat-card__delta stat-card__delta--up" id="stat-disp-delta"></div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div class="grid-2" style="margin-bottom:var(--sp-8); gap:var(--sp-6)">
+        <!-- Chart disponibilidad -->
+        <div class="card card--glow animate-fade-up">
+          <div class="card__header">
+            <div>
+              <div class="card__title">Disponibilidad de libros</div>
+              <div class="card__sub">Disponibles vs prestados</div>
+            </div>
+          </div>
+          <canvas id="chart-disponibilidad" height="180" aria-label="Gráfico de disponibilidad"></canvas>
+        </div>
+
+        <!-- Chart categorías -->
+        <div class="card card--glow animate-fade-up">
+          <div class="card__header">
+            <div>
+              <div class="card__title">Libros por categoría</div>
+              <div class="card__sub">Distribución del catálogo</div>
+            </div>
+          </div>
+          <canvas id="chart-categorias" height="180" aria-label="Gráfico de categorías"></canvas>
+        </div>
+      </div>
+
+      <!-- RECENT LOANS -->
+      <div class="card animate-fade-up" style="margin-bottom:var(--sp-8)">
+        <div class="card__header">
+          <div>
+            <div class="card__title">Préstamos recientes</div>
+            <div class="card__sub">Últimos 10 registros</div>
+          </div>
+          <a href="prestamos.html" class="btn btn--ghost btn--sm">Ver todos →</a>
+        </div>
+        <div class="table-wrapper" id="recent-loans-table">
+          <div style="padding:var(--sp-8);text-align:center">
+            <div class="spinner" aria-label="Cargando"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP LIBROS -->
+      <div class="card animate-fade-up">
+        <div class="card__header">
+          <div>
+            <div class="card__title">Libros más prestados</div>
+            <div class="card__sub">Por ISBN en préstamos activos</div>
+          </div>
+        </div>
+        <div id="top-libros" style="padding:var(--sp-4) 0">
+          <div class="skeleton" style="height:40px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:40px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:40px"></div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

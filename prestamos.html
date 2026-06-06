@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>BiblioTechc — Préstamos</title>
+   <link rel="icon" href="img/bibliotech_dorado.svg"/>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo-icon" aria-hidden="true"><img src="img/bibliotech_blanco.svg" alt="BiblioTechc"  style="width: 100px; height: auto;"/></div>
+      <span class="sidebar__brand-name">BiblioTechc</span>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-section__label">Principal</p>
+        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon">🏠</span> Dashboard</a>
+        <a href="libros.html"    class="nav-link"><span class="nav-link__icon">📖</span> Libros</a>
+        <a href="usuarios.html"  class="nav-link"><span class="nav-link__icon">👥</span> Usuarios</a>
+        <a href="prestamos.html" class="nav-link"><span class="nav-link__icon">🔖</span> Préstamos</a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-section__label">Cuenta</p>
+        <a href="perfil.html" class="nav-link"><span class="nav-link__icon">⚙️</span> Perfil</a>
+      </div>
+    </nav>
+    <div class="sidebar__footer">
+      <div class="user-chip" id="logout-btn" role="button" tabindex="0">
+        <div class="user-chip__avatar" id="user-initial">A</div>
+        <div class="user-chip__info">
+          <div class="user-chip__name" id="user-name">Usuario</div>
+          <div class="user-chip__role">Administrador</div>
+        </div>
+        <span class="user-chip__logout">↩</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú">☰</button>
+      <div>
+        <div class="topbar__title">Préstamos</div>
+        <div class="topbar__breadcrumb">Inicio › <span>Préstamos</span></div>
+      </div>
+      <div class="topbar__spacer"></div>
+    </header>
+
+    <main class="page-body">
+      <div class="page-header animate-fade-up">
+        <p class="page-header__eyebrow">Gestión</p>
+        <h1 class="page-header__title">Préstamos</h1>
+        <p class="page-header__sub">Registro y control de préstamos de libros</p>
+      </div>
+
+      <!-- Stats rápidas -->
+      <div class="grid-3 stagger" style="margin-bottom:var(--sp-8)">
+        <div class="stat-card animate-fade-up">
+          <div class="stat-card__icon stat-card__icon--amber">🔖</div>
+          <div class="stat-card__value" id="stat-total">—</div>
+          <div class="stat-card__label">Préstamos totales</div>
+        </div>
+        <div class="stat-card animate-fade-up">
+          <div class="stat-card__icon stat-card__icon--blue">📅</div>
+          <div class="stat-card__value" id="stat-hoy">—</div>
+          <div class="stat-card__label">Realizados hoy</div>
+        </div>
+        <div class="stat-card animate-fade-up">
+          <div class="stat-card__icon stat-card__icon--green">📚</div>
+          <div class="stat-card__value" id="stat-libros-prestados">—</div>
+          <div class="stat-card__label">Libros únicos prestados</div>
+        </div>
+      </div>
+
+      <div class="toolbar animate-fade-up">
+        <div class="toolbar__left">
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="search" id="filter-input" placeholder="Buscar por ID de usuario o ISBN…"/>
+          </div>
+        </div>
+        <div class="toolbar__right">
+          <span id="prestamos-count" class="badge badge--gray"></span>
+          <button class="btn btn--primary" id="btn-nuevo-prestamo">+ Nuevo préstamo</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper animate-fade-up">
+        <table class="data-table">
+          <thead><tr>
+            <th>Libro (ISBN → Título)</th>
+            <th>Usuario</th>
+            <th>Fecha préstamo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr></thead>
+          <tbody id="prestamos-tbody">
+            <tr><td colspan="5"><div style="padding:var(--sp-8);text-align:center"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="pagination-prestamos" class="pagination"></div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL: Nuevo préstamo -->
+<div class="modal-backdrop" id="modal-form" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title">Registrar préstamo</h2>
+      <button class="modal__close" id="close-form">✕</button>
+    </div>
+    <div class="modal__body">
+      <form id="prestamo-form" novalidate>
+
+        <div class="form-group">
+          <label class="form-label" for="f-usuario">Usuario <span class="required">*</span></label>
+          <select class="form-select" id="f-usuario" data-required>
+            <option value="">Seleccionar usuario…</option>
+          </select>
+          <p class="form-error">Selecciona un usuario</p>
+          <p class="form-hint">O ingresa directamente el ID</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-usuario-id">ID de usuario (manual)</label>
+          <input class="form-input" type="text" id="f-usuario-id" placeholder="ID MongoDB del usuario"/>
+          <p class="form-hint">Si no aparece en la lista, ingresa el ID aquí</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-isbn">Libro (ISBN) <span class="required">*</span></label>
+          <select class="form-select" id="f-isbn" data-required>
+            <option value="">Seleccionar libro…</option>
+          </select>
+          <p class="form-error">Selecciona un libro</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-fecha">Fecha del préstamo <span class="required">*</span></label>
+          <input class="form-input" type="date" id="f-fecha" data-required/>
+          <p class="form-error">Campo requerido</p>
+        </div>
+
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" id="cancel-form">Cancelar</button>
+      <button class="btn btn--primary" id="save-form">Registrar préstamo</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/prestamos.js"></script>
+</body>
+</html>

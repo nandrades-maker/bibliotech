@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>BiblioTechc — Usuarios</title>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo-icon">📚</div>
+      <span class="sidebar__brand-name">BiblioTechc</span>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-section__label">Principal</p>
+        <a href="index.html" class="nav-link"><span class="nav-link__icon">🏠</span> Inicio</a>
+        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon">📊</span> Dashboard</a>
+        <a href="libros.html"    class="nav-link"><span class="nav-link__icon">📖</span> Libros</a>
+        <a href="usuarios.html"  class="nav-link"><span class="nav-link__icon">👥</span> Usuarios</a>
+        <a href="prestamos.html" class="nav-link"><span class="nav-link__icon">🔖</span> Préstamos</a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-section__label">Cuenta</p>
+        <a href="perfil.html" class="nav-link"><span class="nav-link__icon">⚙️</span> Perfil</a>
+        <a href="crear-acceso.html" class="nav-link"><span class="nav-link__icon">🔐</span> Crear acceso</a>
+      </div>
+    </nav>
+    <div class="sidebar__footer">
+      <div class="user-chip" id="logout-btn" role="button" tabindex="0">
+        <div class="user-chip__avatar" id="user-initial">A</div>
+        <div class="user-chip__info">
+          <div class="user-chip__name" id="user-name">Usuario</div>
+          <div class="user-chip__role">Administrador</div>
+        </div>
+        <span class="user-chip__logout">↩</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú">☰</button>
+      <div>
+        <div class="topbar__title">Usuarios</div>
+        <div class="topbar__breadcrumb">Inicio › <span>Usuarios</span></div>
+      </div>
+      <div class="topbar__spacer"></div>
+    </header>
+
+    <main class="page-body">
+      <div class="page-header animate-fade-up">
+        <p class="page-header__eyebrow">Gestión</p>
+        <h1 class="page-header__title">Usuarios</h1>
+        <p class="page-header__sub">Administra los miembros registrados en la biblioteca</p>
+      </div>
+
+      <div class="toolbar animate-fade-up">
+        <div class="toolbar__left">
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="search" id="filter-input" placeholder="Buscar por nombre, correo o teléfono…"/>
+          </div>
+          <select class="form-select" id="filter-tipo" style="width:auto">
+            <option value="">Todos los roles</option>
+            <option value="Admin">Admin</option>
+            <option value="estudiante">Estudiante</option>
+          </select>
+        </div>
+        <div class="toolbar__right">
+          <span id="usuarios-count" class="badge badge--gray"></span>
+          <a href="crear-acceso.html" class="btn btn--ghost">
+            🔐 Crear acceso
+          </a>
+          <button class="btn btn--primary" id="btn-nuevo-usuario">+ Nuevo usuario</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper animate-fade-up">
+        <table class="data-table">
+          <thead><tr>
+            <th>Usuario</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Registro</th>
+            <th>Acciones</th>
+          </tr></thead>
+          <tbody id="usuarios-tbody">
+            <tr><td colspan="6"><div style="padding:var(--sp-8);text-align:center"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="pagination-usuarios" class="pagination"></div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL detalle -->
+<div class="modal-backdrop" id="modal-detalle" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="detalle-nombre">Detalle del usuario</h2>
+      <button class="modal__close" id="close-detalle">✕</button>
+    </div>
+    <div class="modal__body" id="detalle-body"></div>
+  </div>
+</div>
+
+<!-- MODAL form -->
+<div class="modal-backdrop" id="modal-form" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="form-title">Nuevo usuario</h2>
+      <button class="modal__close" id="close-form">✕</button>
+    </div>
+    <div class="modal__body">
+      <form id="usuario-form" novalidate>
+        <input type="hidden" id="usuario-id"/>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-nombre">Nombre completo <span class="required">*</span></label>
+            <input class="form-input" type="text" id="f-nombre" data-required placeholder="Nombre completo"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-correo">Correo <span class="required">*</span></label>
+            <input class="form-input" type="email" id="f-correo" data-required placeholder="correo@ejemplo.com"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-telefono">Teléfono <span class="required">*</span></label>
+            <input class="form-input" type="tel" id="f-telefono" data-required placeholder="3XXXXXXXXX"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-tipo">Rol <span class="required">*</span></label>
+            <select class="form-select" id="f-tipo" data-required>
+              <option value="">Seleccionar…</option>
+              <option value="Admin">Admin</option>
+              <option value="estudiante">Estudiante</option>
+              <option value="docente">Docente</option>
+              <option value="visitante">Visitante</option>
+            </select>
+            <p class="form-error">Campo requerido</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-direccion">Dirección</label>
+          <input class="form-input" type="text" id="f-direccion" placeholder="Dirección del usuario"/>
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" id="cancel-form">Cancelar</button>
+      <button class="btn btn--primary" id="save-form">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/usuarios.js"></script>
+</body>
+</html>

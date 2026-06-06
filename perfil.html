@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>BiblioTechc — Perfil</title>
+   <link rel="icon" href="img/bibliotech_dorado.svg"/>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo-icon" aria-hidden="true"><img src="img/bibliotech_blanco.svg" alt="BiblioTechc"  style="width: 100px; height: auto;"/></div>
+      <span class="sidebar__brand-name">BiblioTechc</span>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-section__label">Principal</p>
+        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon">🏠</span> Dashboard</a>
+        <a href="libros.html"    class="nav-link"><span class="nav-link__icon">📖</span> Libros</a>
+        <a href="usuarios.html"  class="nav-link"><span class="nav-link__icon">👥</span> Usuarios</a>
+        <a href="prestamos.html" class="nav-link"><span class="nav-link__icon">🔖</span> Préstamos</a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-section__label">Cuenta</p>
+        <a href="perfil.html" class="nav-link"><span class="nav-link__icon">⚙️</span> Perfil</a>
+      </div>
+    </nav>
+    <div class="sidebar__footer">
+      <div class="user-chip" id="logout-btn" role="button" tabindex="0">
+        <div class="user-chip__avatar" id="user-initial">A</div>
+        <div class="user-chip__info">
+          <div class="user-chip__name" id="user-name">Usuario</div>
+          <div class="user-chip__role">Administrador</div>
+        </div>
+        <span class="user-chip__logout">↩</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú">☰</button>
+      <div>
+        <div class="topbar__title">Perfil</div>
+        <div class="topbar__breadcrumb">Inicio › <span>Perfil</span></div>
+      </div>
+      <div class="topbar__spacer"></div>
+    </header>
+
+    <main class="page-body" style="max-width:720px">
+      <div class="page-header animate-fade-up">
+        <p class="page-header__eyebrow">Cuenta</p>
+        <h1 class="page-header__title">Mi perfil</h1>
+        <p class="page-header__sub">Gestiona tu cuenta y seguridad</p>
+      </div>
+
+      <!-- Avatar + info -->
+      <div class="card card--glow animate-fade-up" style="margin-bottom:var(--sp-6)">
+        <div style="display:flex;align-items:center;gap:var(--sp-6);flex-wrap:wrap">
+          <div id="profile-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--clr-accent-dim);border:2px solid var(--clr-accent);display:flex;align-items:center;justify-content:center;font-family:var(--ff-display);font-size:2rem;font-weight:900;color:var(--clr-accent);flex-shrink:0">
+            A
+          </div>
+          <div>
+            <h2 id="profile-name" style="font-family:var(--ff-display);font-size:var(--fs-xl);font-weight:700;color:var(--clr-text)">—</h2>
+            <p id="profile-correo" style="font-size:var(--fs-sm);color:var(--clr-text-2);margin-top:4px">—</p>
+            <div style="display:flex;gap:8px;margin-top:8px" id="profile-badges"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos del usuario -->
+      <div class="card animate-fade-up" style="margin-bottom:var(--sp-6)">
+        <div class="card__header">
+          <div class="card__title">Información personal</div>
+          <button class="btn btn--ghost btn--sm" id="btn-edit-info">Editar</button>
+        </div>
+        <div id="info-view">
+          <div class="detail-row"><span class="detail-row__label">Nombre</span><span class="detail-row__value" id="info-nombre">—</span></div>
+          <div class="detail-row"><span class="detail-row__label">Correo</span><span class="detail-row__value" id="info-correo">—</span></div>
+          <div class="detail-row"><span class="detail-row__label">Teléfono</span><span class="detail-row__value" id="info-telefono">—</span></div>
+          <div class="detail-row"><span class="detail-row__label">Dirección</span><span class="detail-row__value" id="info-direccion">—</span></div>
+          <div class="detail-row"><span class="detail-row__label">Rol</span><span class="detail-row__value" id="info-rol">—</span></div>
+          <div class="detail-row"><span class="detail-row__label">Registro</span><span class="detail-row__value" id="info-fecha">—</span></div>
+        </div>
+
+        <div id="info-form" class="hidden" style="margin-top:var(--sp-4)">
+          <input type="hidden" id="edit-usuario-id"/>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit-nombre">Nombre</label>
+              <input class="form-input" type="text" id="edit-nombre"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="edit-correo">Correo</label>
+              <input class="form-input" type="email" id="edit-correo"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit-telefono">Teléfono</label>
+              <input class="form-input" type="tel" id="edit-telefono"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="edit-direccion">Dirección</label>
+              <input class="form-input" type="text" id="edit-direccion"/>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--sp-3);justify-content:flex-end;margin-top:var(--sp-4)">
+            <button class="btn btn--ghost" id="cancel-edit-info">Cancelar</button>
+            <button class="btn btn--primary" id="save-edit-info">Guardar cambios</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cambiar contraseña -->
+      <div class="card animate-fade-up" style="margin-bottom:var(--sp-6)">
+        <div class="card__header">
+          <div class="card__title">Cambiar contraseña</div>
+        </div>
+        <form id="pw-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="pw-nueva">Nueva contraseña <span class="required">*</span></label>
+            <div class="input-icon-wrap">
+              <span class="icon-left">🔒</span>
+              <input class="form-input has-left has-right" type="password" id="pw-nueva" data-required placeholder="••••••••" minlength="6"/>
+              <button type="button" class="icon-right" id="toggle-nueva" aria-label="Mostrar contraseña">👁</button>
+            </div>
+            <p class="form-error">Mínimo 6 caracteres</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pw-confirmar">Confirmar contraseña <span class="required">*</span></label>
+            <div class="input-icon-wrap">
+              <span class="icon-left">🔒</span>
+              <input class="form-input has-left" type="password" id="pw-confirmar" data-required placeholder="••••••••"/>
+            </div>
+            <p class="form-error" id="pw-match-error">Las contraseñas no coinciden</p>
+          </div>
+          <button type="submit" class="btn btn--primary" id="btn-change-pw">Actualizar contraseña</button>
+        </form>
+      </div>
+
+      <!-- Zona peligrosa -->
+      <div class="card animate-fade-up" style="border-color:rgba(240,96,96,0.2)">
+        <div class="card__header">
+          <div class="card__title" style="color:var(--clr-red)">Zona de peligro</div>
+        </div>
+        <p style="font-size:var(--fs-sm);color:var(--clr-text-2);margin-bottom:var(--sp-5)">
+          Eliminar tu cuenta es una acción irreversible. Se borrarán todas tus credenciales de acceso.
+        </p>
+        <button class="btn btn--danger" id="btn-delete-account">Eliminar mi cuenta</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/perfil.js"></script>
+</body>
+</html>

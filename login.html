@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>BiblioTechc — Acceso</title>
+   <link rel="icon" href="img/bibliotech_dorado.svg"/>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <style>
+    body {
+      font-family: var(--ff-body);
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      min-height: 100dvh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Panel izquierdo decorativo ── */
+    .login-art {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: none;
+      background: var(--clr-bg-2);
+    }
+    @media(min-width: 900px){ .login-art { display: flex; flex-direction: column; justify-content: flex-end; } }
+
+    .login-art__bg {
+      position: absolute; inset: 0;
+      background-image:
+        url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=900&q=80');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.25;
+    }
+    .login-art__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 30%, var(--clr-bg-2) 100%);
+    }
+    .login-art__content {
+      position: relative;
+      padding: 48px;
+      z-index: 1;
+    }
+    .login-art__quote {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--clr-text);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .login-art__quote em { color: var(--clr-accent); font-style: italic; }
+    .login-art__attr { font-size: 0.8rem; color: var(--clr-text-3); letter-spacing: 0.06em; }
+
+    /* ── Partículas libro ── */
+    .login-art__deco {
+      position: absolute;
+      top: 48px; left: 48px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .login-art__logo-box {
+      width: 48px; height: 48px;
+      background: var(--clr-accent-dim);
+      border: 1px solid var(--clr-accent);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .login-art__app-name {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--clr-accent);
+    }
+
+    /* ── Panel login ── */
+    .login-panel {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      background: var(--clr-bg);
+    }
+    @media(max-width: 899px){ .login-panel { max-width: 100%; } }
+
+    .login-box { width: 100%; max-width: 380px; animation: fadeUp 0.5s ease both; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-header { margin-bottom: 40px; }
+    .login-logo {
+      width: 52px; height: 52px;
+      background: var(--clr-accent-dim);
+      border: 1px solid var(--clr-accent);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+    .login-title {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--clr-text);
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .login-sub { font-size: 0.875rem; color: var(--clr-text-2); }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--clr-text-3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap .i-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--clr-text-3); font-size: 16px; pointer-events: none;
+    }
+    .input-wrap .toggle-pw {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--clr-text-3); font-size: 16px; padding: 0;
+      transition: color 0.2s;
+    }
+    .input-wrap .toggle-pw:hover { color: var(--clr-accent); }
+
+    .form-input {
+      width: 100%;
+      background: var(--clr-bg-3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 12px 12px 12px 40px;
+      color: var(--clr-text);
+      font-family: var(--ff-body);
+      font-size: 0.9rem;
+      transition: all 0.25s ease;
+    }
+    .form-input::placeholder { color: var(--clr-text-3); }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--clr-accent);
+      box-shadow: 0 0 0 3px rgba(200,169,110,0.15);
+      background: var(--clr-bg-4);
+    }
+    .form-input.error { border-color: var(--clr-red); box-shadow: 0 0 0 3px rgba(240,96,96,0.12); }
+
+    .form-error-msg { font-size: 0.75rem; color: var(--clr-red); margin-top: 6px; display: none; }
+    .has-error .form-error-msg { display: block; }
+
+    /* ── Botón submit ── */
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: var(--clr-accent);
+      color: #0d0f14;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      position: relative; overflow: hidden;
+      margin-top: 8px;
+    }
+    .btn-login:hover { background: var(--clr-accent-soft); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200,169,110,0.35); }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .btn-login .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #0d0f14;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    .btn-login.loading .btn-text { display: none; }
+    .btn-login.loading .spinner  { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Alert error ── */
+    .login-alert {
+      background: rgba(240,96,96,0.08);
+      border: 1px solid rgba(240,96,96,0.25);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: var(--clr-red);
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    .login-alert.show { display: flex; }
+
+    .login-footer { margin-top: 32px; text-align: center; font-size: 0.75rem; color: var(--clr-text-3); }
+    .login-footer span { color: var(--clr-accent); }
+  </style>
+</head>
+<body>
+
+  <!-- Panel decorativo izquierdo -->
+  <div class="login-art" aria-hidden="true">
+    <div class="login-art__bg"></div>
+    <div class="login-art__overlay"></div>
+    <div class="login-art__deco">
+      <div class="login-art__logo-box"><img src="img/bibliotech_blanco.svg" alt="BiblioTechc"  style="width: 50px; height: auto;"/></div>
+      <span class="login-art__app-name">BiblioTechc</span>
+    </div>
+    <div class="login-art__content">
+      <p class="login-art__quote">
+        El conocimiento es <em>poder</em>.<br/>
+        Las bibliotecas son su hogar.
+      </p>
+      <p class="login-art__attr">— Sistema de Gestión BiblioTechc</p>
+    </div>
+  </div>
+
+  <!-- Panel de login -->
+  <div class="login-panel" role="main">
+    <div class="login-box">
+
+      <div class="login-header">
+        <div class="login-logo" aria-hidden="true"><img src="img/bibliotech_blanco.svg" alt="BiblioTechc"  style="width: 50px; height: auto;"/></div>
+        <h1 class="login-title">Bienvenido<br/>de vuelta</h1>
+        <p class="login-sub">Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <!-- Alerta de error -->
+      <div class="login-alert" id="login-alert" role="alert">
+        <span>⚠</span>
+        <span id="login-alert-msg">Credenciales incorrectas. Intenta de nuevo.</span>
+      </div>
+
+      <form id="login-form" novalidate autocomplete="off">
+
+        <div class="form-group" id="fg-usuario">
+          <label class="form-label" for="usuario">Usuario</label>
+          <div class="input-wrap">
+            <span class="i-icon" aria-hidden="true">👤</span>
+            <input
+              class="form-input"
+              type="text"
+              id="usuario"
+              name="usuario"
+              placeholder="Tu nombre de usuario"
+              autocomplete="username"
+              data-required
+            />
+          </div>
+          <p class="form-error-msg">El usuario es requerido</p>
+        </div>
+
+        <div class="form-group" id="fg-password">
+          <label class="form-label" for="password">Contraseña</label>
+          <div class="input-wrap">
+            <span class="i-icon" aria-hidden="true">🔒</span>
+            <input
+              class="form-input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              style="padding-right:40px"
+              data-required
+            />
+            <button type="button" class="toggle-pw" id="toggle-pw" aria-label="Mostrar contraseña">👁</button>
+          </div>
+          <p class="form-error-msg">La contraseña es requerida</p>
+        </div>
+
+        <button type="submit" class="btn-login" id="login-btn">
+          <span class="btn-text">Iniciar sesión</span>
+          <div class="spinner" aria-hidden="true"></div>
+        </button>
+
+      </form>
+
+      <p class="login-footer">BiblioTechc &copy; 2026 — <span>Sistema de Biblioteca</span></p>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

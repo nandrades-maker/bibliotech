@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>BiblioTechc — Libros</title>
+   <link rel="icon" href="img/bibliotech_dorado.svg"/>
+  <link rel="stylesheet" href="css/variables.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/components.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo-icon" aria-hidden="true"><img src="img/bibliotech_blanco.svg" alt="BiblioTechc"  style="width: 100px; height: auto;"/></div>
+      <span class="sidebar__brand-name">BiblioTechc</span>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="nav-section">
+        <p class="nav-section__label">Principal</p>
+        <a href="dashboard.html" class="nav-link"><span class="nav-link__icon">🏠</span> Dashboard</a>
+        <a href="libros.html"    class="nav-link"><span class="nav-link__icon">📖</span> Libros</a>
+        <a href="usuarios.html"  class="nav-link"><span class="nav-link__icon">👥</span> Usuarios</a>
+        <a href="prestamos.html" class="nav-link"><span class="nav-link__icon">🔖</span> Préstamos</a>
+      </div>
+      <div class="nav-section">
+        <p class="nav-section__label">Cuenta</p>
+        <a href="perfil.html" class="nav-link"><span class="nav-link__icon">⚙️</span> Perfil</a>
+      </div>
+    </nav>
+    <div class="sidebar__footer">
+      <div class="user-chip" id="logout-btn" role="button" tabindex="0">
+        <div class="user-chip__avatar" id="user-initial">A</div>
+        <div class="user-chip__info">
+          <div class="user-chip__name" id="user-name">Usuario</div>
+          <div class="user-chip__role">Administrador</div>
+        </div>
+        <span class="user-chip__logout">↩</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú">☰</button>
+      <div>
+        <div class="topbar__title">Catálogo de libros</div>
+        <div class="topbar__breadcrumb">Inicio › <span>Libros</span></div>
+      </div>
+      <div class="topbar__spacer"></div>
+      <div class="topbar__search">
+        <span class="topbar__search-icon" aria-hidden="true">🔍</span>
+        <input type="search" id="search-input" placeholder="Buscar por título…" aria-label="Buscar libro"/>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header animate-fade-up">
+        <p class="page-header__eyebrow">Gestión</p>
+        <h1 class="page-header__title">Libros</h1>
+        <p class="page-header__sub">Administra el catálogo completo de la biblioteca</p>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar animate-fade-up">
+        <div class="toolbar__left">
+          <div class="search-bar">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="search" id="filter-input" placeholder="Filtrar catálogo…" aria-label="Filtrar libros"/>
+          </div>
+          <select class="form-select" id="filter-cat" style="width:auto" aria-label="Filtrar por categoría">
+            <option value="">Todas las categorías</option>
+          </select>
+        </div>
+        <div class="toolbar__right">
+          <span id="libros-count" class="badge badge--gray"></span>
+          <button class="btn btn--primary" id="btn-nuevo-libro">
+            + Nuevo libro
+          </button>
+        </div>
+      </div>
+
+      <!-- Vista grid / tabla toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:var(--sp-4)">
+        <button class="btn btn--ghost btn--sm" id="view-grid" aria-pressed="true">⊞ Grid</button>
+        <button class="btn btn--ghost btn--sm" id="view-table" aria-pressed="false">≡ Tabla</button>
+      </div>
+
+      <!-- Grid view -->
+      <div id="libros-grid" class="grid-3 stagger" style="margin-bottom:var(--sp-6)">
+        <!-- cargando skeletons -->
+        <div class="skeleton" style="height:220px;border-radius:var(--r-lg)"></div>
+        <div class="skeleton" style="height:220px;border-radius:var(--r-lg)"></div>
+        <div class="skeleton" style="height:220px;border-radius:var(--r-lg)"></div>
+      </div>
+
+      <!-- Table view (oculta por defecto) -->
+      <div id="libros-table-view" class="hidden">
+        <div class="table-wrapper">
+          <table class="data-table" id="libros-table">
+            <thead><tr>
+              <th data-col="titulo">Título ↕</th>
+              <th data-col="autor">Autor ↕</th>
+              <th>Categoría</th>
+              <th data-col="isbn">ISBN</th>
+              <th>Año</th>
+              <th>Disponibilidad</th>
+              <th>Acciones</th>
+            </tr></thead>
+            <tbody id="libros-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="pagination-libros" class="pagination"></div>
+
+    </main>
+  </div>
+</div>
+
+<!-- MODAL: Ver detalle libro -->
+<div class="modal-backdrop" id="modal-detalle" role="dialog" aria-modal="true" aria-label="Detalle del libro">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="detalle-titulo">Detalle del libro</h2>
+      <button class="modal__close" id="close-detalle" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal__body" id="detalle-body"></div>
+  </div>
+</div>
+
+<!-- MODAL: Crear / Editar libro -->
+<div class="modal-backdrop" id="modal-form" role="dialog" aria-modal="true" aria-label="Formulario libro">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="form-title">Nuevo libro</h2>
+      <button class="modal__close" id="close-form" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal__body">
+      <form id="libro-form" novalidate>
+        <input type="hidden" id="libro-id"/>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-titulo">Título <span class="required">*</span></label>
+            <input class="form-input" type="text" id="f-titulo" data-required placeholder="Título del libro"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-autor">Autor <span class="required">*</span></label>
+            <input class="form-input" type="text" id="f-autor" data-required placeholder="Nombre del autor"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-isbn">ISBN <span class="required">*</span></label>
+            <input class="form-input" type="number" id="f-isbn" data-required placeholder="Código ISBN"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-categoria">Categoría <span class="required">*</span></label>
+            <input class="form-input" type="text" id="f-categoria" data-required placeholder="Ej: Novela, Ciencia…"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-editorial">Editorial</label>
+            <input class="form-input" type="text" id="f-editorial" placeholder="Editorial"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-anio">Año publicación</label>
+            <input class="form-input" type="number" id="f-anio" placeholder="2024" min="1000" max="2099"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-total">Cantidad total <span class="required">*</span></label>
+            <input class="form-input" type="number" id="f-total" data-required placeholder="0" min="0"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-disponible">Disponibles <span class="required">*</span></label>
+            <input class="form-input" type="number" id="f-disponible" data-required placeholder="0" min="0"/>
+            <p class="form-error">Campo requerido</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-ubicacion">Ubicación</label>
+          <input class="form-input" type="text" id="f-ubicacion" placeholder="Ej: P1-E1-1"/>
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" id="cancel-form">Cancelar</button>
+      <button class="btn btn--primary" id="save-form">Guardar libro</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/libros.js"></script>
+</body>
+</html>
